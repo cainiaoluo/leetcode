@@ -1,22 +1,23 @@
 class Solution:
     def findKthLargest(self, nums: List[int], k: int) -> int:
         n = len(nums)
+        #使得根的值大于它的左子树和右子树的值
         for i in range(k//2-1, -1, -1):
             self.heapify(i, k, nums)
-            
+
+        #对前k个元素堆排序 
         for i in range(k-1, 0, -1):
             nums[i], nums[0] = nums[0], nums[i]
             self.heapify(0, i, nums)
         
-        nums[0], nums[k-1] = nums[k-1], nums[0]
+        #对最小元利用最小堆排序进行选择排序
         for i in range(k, n):
-            if nums[i] > nums[k-1]:
-                nums[i], nums[k-1] = nums[k-1], nums[i]
+            if nums[i] > nums[0]:
                 self.heapify_small(0, k, nums)
-                nums[k-1], nums[0] = nums[0], nums[k-1]
-                
-        return nums[k-1]
-    
+
+        return nums[0]
+
+    #建最小堆
     def heapify_small(self, begin, end, nums):
         left, right = 2*begin + 1, 2*begin + 2
         smallest = begin
@@ -28,6 +29,8 @@ class Solution:
             nums[begin], nums[smallest] = nums[smallest], nums[begin]
             self.heapify_small(smallest, end, nums)
         
+
+    #建最大堆
     def heapify(self, begin, end, nums):
         left, right = 2*begin + 1, 2*begin + 2
         largest = begin
